@@ -181,8 +181,6 @@ function EntranceSequence({
   onIntroComplete?: () => void;
 }) {
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-
     let cancelled = false;
 
     const runIntro = () => {

@@ -2,73 +2,58 @@ import { memo } from "react";
 import { ExternalLink } from "lucide-react";
 import GlassPanel, {
   getGlassTheme,
-  glassPanelPadding,
-  mobileScrollPanelClasses,
   sectionShellClasses,
-  type GlassTint,
 } from "../ui/GlassPanel";
+import SectionHeader from "../ui/SectionHeader";
+import SectionModeStack from "../ui/SectionModeStack";
+import {
+  CLARITY,
+  SECONDARY_PROJECTS,
+  type Project,
+} from "../../content/portfolio";
 
-type BadgeVariant = "sky" | "amber" | "neutral";
+const cardPaddingClasses = "p-3 md:p-5 lg:p-8";
+const bodyTextMobile = "text-[11px] leading-snug";
+const bodyTextDesktop = "text-xs sm:text-sm md:text-base leading-relaxed";
 
-type Project = {
-  title: string;
-  subtitle: string;
-  role: string;
-  description: string;
-  link?: string;
-  stack: string[];
-  badgeVariant: BadgeVariant;
-  tint: GlassTint;
-  featured?: boolean;
-};
+function ProjectDescriptions({
+  project,
+  isDarkMode,
+  variant,
+}: {
+  project: Project;
+  isDarkMode: boolean;
+  variant: "mobile" | "desktop";
+}) {
+  const theme = getGlassTheme(isDarkMode);
+  const isMobile = variant === "mobile";
+  const dayText = isMobile ? project.mobileDayDescription : project.dayDescription;
+  const nightText = isMobile ? project.mobileNightDescription : project.nightDescription;
+  const textClass = isMobile ? bodyTextMobile : bodyTextDesktop;
 
-const CLARITY: Project = {
-  title: "Clarity",
-  subtitle: "Personal Cloud Project",
-  role: "Full Stack Developer · Mar 2026 – Present",
-  description:
-    "AI-powered journaling app deployed on Vercel with GCP Vertex AI integration for secure, intelligent user experiences. Authored Cypress E2E and unit tests to keep user journeys robust and bug-free.",
-  link: "https://clarity-journal-psi.vercel.app",
-  stack: ["React", "TypeScript", "CSS", "GCP Vertex AI", "Vercel", "Cypress"],
-  badgeVariant: "sky",
-  tint: "sky",
-  featured: true,
-};
-
-const SECONDARY_PROJECTS: Project[] = [
-  {
-    title: "Guard-Side + QR TextSundo",
-    subtitle: "Monitoring & QR Notification System",
-    role: "Project Manager & System Analyst · Aug 2025 – Dec 2025",
-    description:
-      "Led stakeholder requirements gathering and SDLC delivery for a real-time guard-side monitoring system with QR TextSundo notification endpoints. Mapped business processes to system capabilities and maintained technical documentation.",
-    stack: [
-      "REST APIs",
-      "System Analysis",
-      "Real-time Notifications",
-      "Technical Documentation",
-    ],
-    badgeVariant: "amber",
-    tint: "warm",
-  },
-  {
-    title: "Pharmacy Management System",
-    subtitle: "Legacy Migration",
-    role: "Full Stack Developer · Jan 2026 – May 2026",
-    description:
-      "Migrated a legacy pharmacy system to a modern Electron desktop app with Node.js and MongoDB. Built async JSON data pipelines for secure transactional updates and participated in UAT and peer code reviews.",
-    stack: ["Electron", "Node.js", "MongoDB", "JSON Pipelines"],
-    badgeVariant: "neutral",
-    tint: "neutral",
-  },
-];
+  return (
+    <SectionModeStack
+      isDarkMode={isDarkMode}
+      gridClassName="grid grid-rows-1 w-full"
+      className={isMobile ? "mt-1.5 md:hidden" : "mt-3 md:mt-4 hidden md:block"}
+      dayLayer={
+        <p className={`${textClass} ${theme.bodyText}`}>{dayText}</p>
+      }
+      nightLayer={
+        <p className={`${textClass} ${theme.bodyText}`}>{nightText}</p>
+      }
+    />
+  );
+}
 
 function ProjectCard({
   project,
   isDarkMode,
+  className = "",
 }: {
   project: Project;
   isDarkMode: boolean;
+  className?: string;
 }) {
   const theme = getGlassTheme(isDarkMode);
   const badgeVariants = {
@@ -76,6 +61,7 @@ function ProjectCard({
     amber: theme.badgeAmber,
     neutral: theme.badgeNeutral,
   };
+  const badgeMobile = "max-md:text-[10px] max-md:px-2 max-md:py-0.5";
 
   return (
     <GlassPanel
@@ -83,38 +69,46 @@ function ProjectCard({
       hover
       tint={project.tint}
       isDarkMode={isDarkMode}
-      className={`${glassPanelPadding} text-left h-full`}
+      className={`${cardPaddingClasses} text-left h-full ${className} ${
+        project.featured ? "md:min-h-[240px]" : ""
+      }`}
     >
       <h3
         className={`font-black tracking-tighter leading-tight ${
           project.featured
-            ? "text-lg sm:text-xl md:text-2xl"
-            : "text-base sm:text-lg md:text-xl"
+            ? "text-base sm:text-xl md:text-2xl"
+            : "text-sm sm:text-lg md:text-xl"
         }`}
       >
         {project.title}
       </h3>
-      <p className={`${theme.microLabel} mt-2`}>{project.subtitle}</p>
-      <p className={`${theme.microLabel} mt-1 ${theme.roleText}`}>{project.role}</p>
-      <p
-        className={`text-xs sm:text-sm md:text-base ${theme.bodyText} mt-3 md:mt-4 leading-relaxed`}
-      >
-        {project.description}
+      <p className={`${theme.microLabel} mt-1 md:mt-2 max-md:text-[9px]`}>
+        {project.subtitle}
       </p>
+      <p
+        className={`${theme.microLabel} mt-0.5 md:mt-1 ${theme.roleText} leading-snug max-md:text-[9px]`}
+      >
+        {project.role}
+      </p>
+      <ProjectDescriptions project={project} isDarkMode={isDarkMode} variant="mobile" />
+      <ProjectDescriptions project={project} isDarkMode={isDarkMode} variant="desktop" />
       {project.link && (
         <a
           href={project.link}
           target="_blank"
           rel="noopener noreferrer"
-          className={`${theme.ctaButton} mt-3 md:mt-4 text-sm font-mono`}
+          className={`${theme.ctaButton} mt-2 md:mt-4 text-xs md:text-sm font-mono max-w-full max-md:px-3 max-md:py-2`}
         >
-          <ExternalLink className="w-4 h-4 shrink-0" />
-          {project.link.replace("https://", "")}
+          <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0" />
+          <span className="truncate">{project.link.replace("https://", "")}</span>
         </a>
       )}
-      <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-3 md:mt-4">
+      <div className="flex flex-wrap gap-1 sm:gap-2 mt-2 md:mt-4">
         {project.stack.map((tech) => (
-          <span key={tech} className={badgeVariants[project.badgeVariant]}>
+          <span
+            key={tech}
+            className={`${badgeVariants[project.badgeVariant]} ${badgeMobile}`}
+          >
             {tech}
           </span>
         ))}
@@ -128,23 +122,29 @@ type ProjectsProps = {
 };
 
 const Projects = ({ isDarkMode = false }: ProjectsProps) => {
-  const theme = getGlassTheme(isDarkMode);
-
   return (
     <div
-      className={`flex flex-col items-start justify-center h-full text-white text-left font-sans ${sectionShellClasses}`}
+      className={`flex flex-col items-start justify-center h-full w-full text-white text-left font-sans ${sectionShellClasses}`}
     >
-      <h2 className={theme.displayTitle}>Projects</h2>
-      <div
-        className={`flex flex-col gap-3 md:gap-4 w-full mt-3 md:mt-6 ${mobileScrollPanelClasses}`}
-      >
+      <SectionHeader
+        isDarkMode={isDarkMode}
+        dayTitle="Projects"
+        nightTitle="Projects"
+        daySubtitle="Built across the landscape"
+        nightSubtitle="Peaks in the portfolio"
+        hideSubtitleOnMobile
+        className="mb-2 md:mb-6 [&_h2]:!text-2xl [&_h2]:sm:!text-3xl [&_h2]:md:!text-5xl"
+      />
+
+      <div className="flex flex-col gap-2 md:gap-4 w-full">
         <ProjectCard project={CLARITY} isDarkMode={isDarkMode} />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-          {SECONDARY_PROJECTS.map((project) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 items-start">
+          {SECONDARY_PROJECTS.map((project, i) => (
             <ProjectCard
               key={project.title}
               project={project}
               isDarkMode={isDarkMode}
+              className={i === 0 ? "md:-mt-2" : "md:mt-4"}
             />
           ))}
         </div>

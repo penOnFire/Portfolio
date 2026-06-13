@@ -5,9 +5,9 @@ import GlassPanel, {
   glassPanelPadding,
   sectionShellClasses,
 } from "../ui/GlassPanel";
-
-const LINKEDIN_URL = "https://linkedin.com/in/sean-m-fernandez";
-const GITHUB_URL = "https://github.com/seanmfernandez";
+import SectionHeader from "../ui/SectionHeader";
+import SectionModeStack from "../ui/SectionModeStack";
+import { CONTACT } from "../../content/portfolio";
 
 const LinkedInIcon = () => (
   <svg
@@ -33,6 +33,29 @@ const GitHubIcon = () => (
   </svg>
 );
 
+const CTA_LINKS = [
+  {
+    href: `mailto:${CONTACT.email}`,
+    label: "Email",
+    icon: Mail,
+    arcClass: "md:-rotate-2 md:translate-y-0",
+  },
+  {
+    href: CONTACT.linkedin,
+    label: "LinkedIn",
+    icon: LinkedInIcon,
+    external: true,
+    arcClass: "md:rotate-1 md:-translate-y-1",
+  },
+  {
+    href: CONTACT.github,
+    label: "GitHub",
+    icon: GitHubIcon,
+    external: true,
+    arcClass: "md:rotate-2 md:translate-y-0",
+  },
+] as const;
+
 type ContactProps = {
   isDarkMode?: boolean;
 };
@@ -49,66 +72,95 @@ const Contact = ({ isDarkMode = false }: ContactProps) => {
         isDarkMode={isDarkMode}
         className={`w-full max-w-md md:max-w-lg ${glassPanelPadding}`}
       >
-        <h2 className={theme.displayTitle}>Let&apos;s Build</h2>
-        <p
-          className={`text-xl sm:text-2xl md:text-3xl font-bold ${theme.subtitle} tracking-tight -mt-1`}
-        >
-          Together
-        </p>
+        <SectionHeader
+          isDarkMode={isDarkMode}
+          align="center"
+          dayTitle={<>Let&apos;s build</>}
+          nightTitle={<>Let&apos;s build</>}
+          daySubtitle="Something bright"
+          nightSubtitle="Under the stars"
+        />
 
         <div className={`${theme.calloutBox} mb-4 md:mb-6 mt-4 md:mt-6`}>
-          <p className="text-sm sm:text-base md:text-lg font-semibold text-white leading-snug">
-            Actively seeking a{" "}
-            <span className={theme.calloutHighlight}>
-              Software Development Internship (OJT)
-            </span>{" "}
-            starting June 2026.
-          </p>
+          <SectionModeStack
+            isDarkMode={isDarkMode}
+            gridClassName="grid w-full"
+            dayLayer={
+              <p className="text-sm sm:text-base md:text-lg font-semibold text-white leading-snug">
+                Actively seeking a{" "}
+                <span className={theme.calloutHighlight}>
+                  Software Development Internship (OJT)
+                </span>{" "}
+                starting June 2026.
+              </p>
+            }
+            nightLayer={
+              <p className="text-sm sm:text-base md:text-lg font-semibold text-white leading-snug">
+                Open for a{" "}
+                <span className={theme.calloutHighlight}>
+                  Software Development Internship (OJT)
+                </span>{" "}
+                — June 2026 onward.
+              </p>
+            }
+          />
         </div>
 
-        <p
-          className={`text-xs sm:text-sm md:text-base ${theme.bodyText} mb-4 md:mb-6 leading-relaxed`}
-        >
-          I&apos;d love to contribute my full-stack skills, backend focus, and
-          cloud engineering mindset to a team building impactful software.
-        </p>
+        <SectionModeStack
+          isDarkMode={isDarkMode}
+          gridClassName="grid w-full"
+          className="mb-4 md:mb-6"
+          dayLayer={
+            <p className={`text-xs sm:text-sm md:text-base ${theme.bodyText} leading-relaxed`}>
+              {CONTACT.dayBody}
+            </p>
+          }
+          nightLayer={
+            <p className={`text-xs sm:text-sm md:text-base ${theme.bodyText} leading-relaxed`}>
+              {CONTACT.nightBody}
+            </p>
+          }
+        />
 
-        <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 pointer-events-auto">
-          <a href="mailto:fernandez.sean.marino@gmail.com" className={theme.ctaButton}>
-            <Mail className="w-4 h-4 shrink-0" />
-            Email
-          </a>
-          <a
-            href={LINKEDIN_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn profile"
-            className={theme.ctaButton}
-          >
-            <LinkedInIcon />
-            LinkedIn
-          </a>
-          <a
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub profile"
-            className={theme.ctaButton}
-          >
-            <GitHubIcon />
-            GitHub
-          </a>
+        <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-3 pointer-events-auto md:items-end md:pb-1">
+          {CTA_LINKS.map(({ href, label, icon: Icon, arcClass, ...rest }) => (
+            <a
+              key={label}
+              href={href}
+              target={"external" in rest && rest.external ? "_blank" : undefined}
+              rel={"external" in rest && rest.external ? "noopener noreferrer" : undefined}
+              aria-label={"external" in rest && rest.external ? `${label} profile` : undefined}
+              className={`${theme.ctaButton} ${arcClass}`}
+            >
+              <Icon className="w-4 h-4 shrink-0" />
+              {label}
+            </a>
+          ))}
         </div>
 
-        <div className="flex flex-col items-start gap-1 mt-4 md:mt-5 pointer-events-auto">
+        <div className="flex flex-col items-center gap-1 mt-4 md:mt-5 pointer-events-auto">
           <a
-            href="tel:+639366819789"
+            href={CONTACT.phoneHref}
             className={`${theme.microLabel} inline-flex items-center gap-2 hover:text-white/70 transition-colors`}
           >
             <Phone className="w-3 h-3 shrink-0" />
-            +63 936 681 9789
+            {CONTACT.phone}
           </a>
-          <span className={theme.microLabel}>Quezon City, Metro Manila</span>
+          <SectionModeStack
+            isDarkMode={isDarkMode}
+            gridClassName="grid place-items-center w-full"
+            dayLayer={
+              <span className={theme.microLabel}>{CONTACT.location}</span>
+            }
+            nightLayer={
+              <span className={theme.microLabel}>
+                <span className="text-[#6dd5ff]/60 mr-1" aria-hidden="true">
+                  ✦
+                </span>
+                {CONTACT.location}
+              </span>
+            }
+          />
         </div>
       </GlassPanel>
     </div>

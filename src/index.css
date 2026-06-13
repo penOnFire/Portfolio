@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -8,22 +10,41 @@
 
 html {
   scroll-behavior: auto;
+}
+
+html[data-route="immersive"],
+html[data-route="immersive"] body {
+  overflow: hidden;
+  height: 100%;
+}
+
+html[data-route="immersive"] body {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
-html::-webkit-scrollbar {
+html[data-route="immersive"] body::-webkit-scrollbar {
   display: none;
+}
+
+html[data-route="minimal"],
+html[data-route="minimal"] body {
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 100dvh;
+  height: auto;
+}
+
+html:not([data-route]),
+html:not([data-route]) body {
+  overflow: hidden;
 }
 
 body {
-  overflow: hidden;
-  background-color: white;
   font-family: var(--font-sans);
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  margin: 0;
 }
 
-body::-webkit-scrollbar {
-  display: none;
+#root {
+  min-height: 100dvh;
 }

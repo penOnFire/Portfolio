@@ -8,10 +8,22 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          three: ["three"],
-          r3f: ["@react-three/fiber", "@react-three/drei"],
-          gsap: ["gsap"],
+        manualChunks(id) {
+          if (
+            id.includes("node_modules/three") ||
+            id.includes("@react-three")
+          ) {
+            return "r3f";
+          }
+          if (id.includes("node_modules/gsap")) {
+            return "gsap";
+          }
+          if (
+            id.includes("/components/pages/Landing") ||
+            id.includes("/components/3d/")
+          ) {
+            return "immersive";
+          }
         },
       },
     },

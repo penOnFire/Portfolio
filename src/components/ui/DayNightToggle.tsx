@@ -1,9 +1,10 @@
 import { Moon, Sun } from "lucide-react";
 import { useDayNight } from "../../context/DayNightContext";
-import { ctaButtonClasses } from "./GlassPanel";
+import { getLandscapeTheme } from "../../utils/uiLandscapeTokens";
 
 export default function DayNightToggle() {
   const { isDarkMode, toggleDarkMode } = useDayNight();
+  const theme = getLandscapeTheme(isDarkMode);
 
   return (
     <button
@@ -11,16 +12,16 @@ export default function DayNightToggle() {
       onClick={toggleDarkMode}
       aria-pressed={isDarkMode}
       aria-label={isDarkMode ? "Switch to day mode" : "Switch to night mode"}
-      className={`${ctaButtonClasses} fixed top-4 right-4 z-50 font-mono text-xs uppercase tracking-widest`}
+      className={`${theme.ctaButton} fixed top-4 right-4 z-50 font-mono text-xs uppercase tracking-widest`}
     >
       {isDarkMode ? (
         <>
-          <Sun className="w-4 h-4 shrink-0 text-amber-200" />
+          <Sun className="w-4 h-4 shrink-0 text-[#FFD65A]" />
           Day
         </>
       ) : (
         <>
-          <Moon className="w-4 h-4 shrink-0 text-sky-200" />
+          <Moon className="w-4 h-4 shrink-0 text-[#88bbff]" />
           Night
         </>
       )}
