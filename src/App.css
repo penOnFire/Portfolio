@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+body {
+  overflow: hidden; /* hides scrollbar */
+}
+
+body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.section {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.section h1,
+.section h2 {
+  margin-bottom: 1rem;
+}
+
+.section p,
+.section ul {
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
