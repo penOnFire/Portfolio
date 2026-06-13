@@ -135,5 +135,23 @@ export function getLandscapeTheme(isDarkMode: boolean) {
     headlineText: "block text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[#E8E8E8]",
     accentLine: "block text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-1",
     accentSun: "block text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-1 text-[#FFD65A]",
+
+    formLabel: night
+      ? "block text-[10px] uppercase tracking-[0.18em] text-[#88bbff]/55 font-mono mb-1.5"
+      : "block text-[10px] uppercase tracking-[0.18em] text-white/50 font-mono mb-1.5",
+
+    formInput: night
+      ? "w-full rounded-xl bg-[#0d1b2a]/50 px-3 py-2.5 text-sm text-[#E8E8E8]/95 ring-1 ring-[#88bbff]/18 placeholder:text-white/30 focus:outline-none focus:ring-[#6dd5ff]/40"
+      : "w-full rounded-xl bg-white/[0.06] px-3 py-2.5 text-sm text-white/95 ring-1 ring-white/12 placeholder:text-white/35 focus:outline-none focus:ring-[#b89d24]/35",
+
+    formTextarea: night
+      ? "w-full min-h-[5.5rem] resize-y rounded-xl bg-[#0d1b2a]/50 px-3 py-2.5 text-sm text-[#E8E8E8]/95 ring-1 ring-[#88bbff]/18 placeholder:text-white/30 focus:outline-none focus:ring-[#6dd5ff]/40 md:min-h-[6.5rem]"
+      : "w-full min-h-[5.5rem] resize-y rounded-xl bg-white/[0.06] px-3 py-2.5 text-sm text-white/95 ring-1 ring-white/12 placeholder:text-white/35 focus:outline-none focus:ring-[#b89d24]/35 md:min-h-[6.5rem]",
+
+    formStatusSuccess: night
+      ? "text-sm text-[#6dd5ff]/90 font-medium"
+      : "text-sm text-[#FFD65A]/95 font-medium",
+
+    formStatusError: "text-sm text-red-300/90 font-medium",
   };
 }

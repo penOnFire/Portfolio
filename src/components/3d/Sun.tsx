@@ -1,23 +1,29 @@
-import { useRef, useMemo } from "react";
+import { memo, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { useDayNight } from "../../context/DayNightContext";
+import { useNightCycleRef } from "../../context/DayNightContext";
 import { useCursorFaceTracking } from "../../hooks/useCursorFaceTracking";
+import { sharedGeometries } from "../../utils/geometryCache";
 import { SUN_LIGHT, lerpColorPair } from "../../utils/nightPalettes";
 
-export default function Sun({
+function Sun({
   position,
   scale = 1,
 }: {
   position: [number, number, number];
   scale?: number | [number, number, number];
 }) {
-  const { nightCycleRef } = useDayNight();
+  const nightCycleRef = useNightCycleRef();
   const groupRef = useRef<THREE.Group>(null);
   const raysRef = useRef<THREE.Group>(null);
   const skyLightRef = useRef<THREE.PointLight>(null);
   const bodyMatRef = useRef<THREE.MeshStandardMaterial>(null);
   const tmpLightColor = useMemo(() => new THREE.Color(), []);
+  const bodyGeometry = useMemo(() => sharedGeometries.sunBody(), []);
+  const rayGeometry = useMemo(() => sharedGeometries.sunRay(), []);
+  const eyeGeometry = useMemo(() => sharedGeometries.sunEye(), []);
+  const mouthSmileGeometry = useMemo(() => sharedGeometries.sunMouthSmile(), []);
+  const mouthNeutralGeometry = useMemo(() => sharedGeometries.sunMouthNeutral(), []);
   const {
     faceRef,
     leftEyeRef,
@@ -74,8 +80,7 @@ export default function Sun({
       <group ref={raysRef}>
         {Array.from({ length: 12 }).map((_, i) => (
           <group key={i} rotation={[0, 0, (i / 12) * Math.PI * 2]}>
-            <mesh position={[0, 0.9, -0.2]}>
-              <cylinderGeometry args={[0.05, 0.35, 0.8, 8]} />
+            <mesh geometry={rayGeometry} position={[0, 0.9, -0.2]}>
               <meshStandardMaterial
                 color="#ffcc00"
                 emissive="#ff9900"
@@ -87,8 +92,7 @@ export default function Sun({
         ))}
       </group>
 
-      <mesh>
-        <sphereGeometry args={[0.8, 32, 32]} />
+      <mesh geometry={bodyGeometry}>
         <meshStandardMaterial
           ref={bodyMatRef}
           color="#ffcc00"
@@ -98,23 +102,24 @@ export default function Sun({
       </mesh>
 
       <group ref={faceRef}>
-        <mesh ref={leftEyeRef} position={[-0.25, 0.2, 0.72]}>
-          <sphereGeometry args={[0.1, 16, 16]} />
+        <mesh ref={leftEyeRef} geometry={eyeGeometry} position={[-0.25, 0.2, 0.72]}>
           <meshBasicMaterial color="#222" />
         </mesh>
 
-        <mesh ref={rightEyeRef} position={[0.25, 0.2, 0.72]}>
-          <sphereGeometry args={[0.1, 16, 16]} />
+        <mesh ref={rightEyeRef} geometry={eyeGeometry} position={[0.25, 0.2, 0.72]}>
           <meshBasicMaterial color="#222" />
         </mesh>
 
-        <mesh position={[0, -0.2, 0.72]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry
-            args={[isSmiling ? 0.22 : 0.12, isSmiling ? 0.22 : 0.12, 0.05, 32]}
-          />
+        <mesh
+          geometry={isSmiling ? mouthSmileGeometry : mouthNeutralGeometry}
+          position={[0, -0.2, 0.72]}
+          rotation={[Math.PI / 2, 0, 0]}
+        >
           <meshBasicMaterial color="#222" />
         </mesh>
       </group>
     </group>
   );
 }
+
+export default memo(Sun);

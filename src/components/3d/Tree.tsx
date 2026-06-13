@@ -1,14 +1,19 @@
-import { useMemo, useRef } from "react";
+import { memo, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useDayNight } from "../../context/DayNightContext";
+import { useNightCycleRef } from "../../context/DayNightContext";
 import { TREE_FOLIAGE, TREE_TRUNK, lerpColorPair } from "../../utils/nightPalettes";
+import { sharedGeometries } from "../../utils/geometryCache";
 
-export default function Tree(props: React.ComponentProps<"group">) {
-  const { nightCycleRef } = useDayNight();
+function Tree(props: React.ComponentProps<"group">) {
+  const nightCycleRef = useNightCycleRef();
   const trunkMatRef = useRef<THREE.MeshStandardMaterial>(null);
   const foliageMatRefs = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
   const tmpColor = useMemo(() => new THREE.Color(), []);
+  const trunkGeometry = useMemo(() => sharedGeometries.treeTrunk(), []);
+  const foliageLarge = useMemo(() => sharedGeometries.treeFoliageLarge(), []);
+  const foliageMid = useMemo(() => sharedGeometries.treeFoliageMid(), []);
+  const foliageSmall = useMemo(() => sharedGeometries.treeFoliageSmall(), []);
 
   useFrame(() => {
     const t = nightCycleRef.current.progress;
@@ -27,13 +32,11 @@ export default function Tree(props: React.ComponentProps<"group">) {
 
   return (
     <group {...props}>
-      <mesh position={[0, -0.3, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.07, 0.07, 0.6, 8]} />
+      <mesh geometry={trunkGeometry} position={[0, -0.3, 0]} castShadow receiveShadow>
         <meshStandardMaterial ref={trunkMatRef} color="#5a5127" />
       </mesh>
 
-      <mesh position={[0, 0.2, 0]} castShadow>
-        <coneGeometry args={[0.6, 0.8, 6]} />
+      <mesh geometry={foliageLarge} position={[0, 0.2, 0]} castShadow>
         <meshStandardMaterial
           ref={(el) => {
             foliageMatRefs.current[0] = el;
@@ -42,8 +45,7 @@ export default function Tree(props: React.ComponentProps<"group">) {
         />
       </mesh>
 
-      <mesh position={[0, 0.6, 0]} castShadow>
-        <coneGeometry args={[0.45, 0.7, 6]} />
+      <mesh geometry={foliageMid} position={[0, 0.6, 0]} castShadow>
         <meshStandardMaterial
           ref={(el) => {
             foliageMatRefs.current[1] = el;
@@ -52,8 +54,7 @@ export default function Tree(props: React.ComponentProps<"group">) {
         />
       </mesh>
 
-      <mesh position={[0, 0.95, 0]} castShadow>
-        <coneGeometry args={[0.3, 0.5, 6]} />
+      <mesh geometry={foliageSmall} position={[0, 0.95, 0]} castShadow>
         <meshStandardMaterial
           ref={(el) => {
             foliageMatRefs.current[2] = el;
@@ -64,3 +65,5 @@ export default function Tree(props: React.ComponentProps<"group">) {
     </group>
   );
 }
+
+export default memo(Tree);

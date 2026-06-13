@@ -1,4 +1,3 @@
-import { Mail } from "lucide-react";
 import { PROFILE, CONTACT } from "../../../content/portfolio";
 import { useTheme } from "../../../context/ThemeContext";
 import { getMinimalTheme } from "../../../utils/minimalTokens";
@@ -18,9 +17,8 @@ export default function HeroTile() {
         {PROFILE.ojtStatus}
       </p>
       <div className="flex flex-wrap gap-2">
-        <a href={`mailto:${CONTACT.email}`} className={theme.buttonPrimary}>
-          <Mail className="w-4 h-4 shrink-0" />
-          Email
+        <a href="#contact" className={theme.buttonPrimary}>
+          Send a message
         </a>
         <a
           href={CONTACT.linkedin}

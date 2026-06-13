@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { memo, useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
-import { useDayNight } from "../../context/DayNightContext";
+import { useNightCycleRef } from "../../context/DayNightContext";
+import { sharedGeometries } from "../../utils/geometryCache";
 import { CLOUD, lerpColorPair } from "../../utils/nightPalettes";
 
 type CloudSphere = {
@@ -49,12 +50,16 @@ function Cloud({
   color?: string;
   seed?: number;
 }) {
-  const { nightCycleRef } = useDayNight();
+  const nightCycleRef = useNightCycleRef();
   const groupRef = useRef<THREE.Group>(null);
   const sphereRefs = useRef<(THREE.Mesh | null)[]>([]);
   const materialRefs = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
   const tmpColor = useMemo(() => new THREE.Color(), []);
   const cloudSpheres = useMemo(() => getCloudSpheres(seed), [seed]);
+  const sphereGeometries = useMemo(
+    () => cloudSpheres.map((sphere) => sharedGeometries.cloudSphere(sphere.radius)),
+    [cloudSpheres],
+  );
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
@@ -89,10 +94,10 @@ function Cloud({
           ref={(el) => {
             sphereRefs.current[index] = el;
           }}
+          geometry={sphereGeometries[index]}
           position={sphere.pos}
           receiveShadow
         >
-          <sphereGeometry args={[sphere.radius, 32, 32]} />
           <meshStandardMaterial
             ref={(el) => {
               materialRefs.current[index] = el;

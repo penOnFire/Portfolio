@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { useDayNight } from "../../context/DayNightContext";
+import { useNightCycleRef } from "../../context/DayNightContext";
 import Moon from "./Moon";
 import Sun from "./Sun";
 
@@ -22,7 +22,7 @@ export default function CelestialSystem({
   sunScale?: number;
   moonScale?: number;
 }) {
-  const { nightCycleRef } = useDayNight();
+  const nightCycleRef = useNightCycleRef();
   const wheelRef = useRef<THREE.Group>(null);
   const sunArmRef = useRef<THREE.Group>(null);
   const moonArmRef = useRef<THREE.Group>(null);

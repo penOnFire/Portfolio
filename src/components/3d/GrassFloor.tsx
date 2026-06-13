@@ -1,10 +1,11 @@
-import { useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { memo, useMemo, useRef } from "react";
 import { Mesh, MeshStandardMaterial, Color } from "three";
-import { useDayNight } from "../../context/DayNightContext";
+import { useFrame } from "@react-three/fiber";
+import { useNightCycleRef } from "../../context/DayNightContext";
+import { sharedGeometries } from "../../utils/geometryCache";
 import { GRASS, lerpColorPair } from "../../utils/nightPalettes";
 
-export default function GrassFloor({
+function GrassFloor({
   position = [0, -1.2, 0],
   radius = 10,
   height = 0.5,
@@ -17,10 +18,14 @@ export default function GrassFloor({
   color?: string;
   scale?: number | [number, number, number];
 }) {
-  const { nightCycleRef } = useDayNight();
+  const nightCycleRef = useNightCycleRef();
   const meshRef = useRef<Mesh>(null);
   const matRef = useRef<MeshStandardMaterial>(null);
   const tmpColor = useMemo(() => new Color(), []);
+  const geometry = useMemo(
+    () => sharedGeometries.grassCylinder(radius, height),
+    [radius, height],
+  );
 
   useFrame(() => {
     const t = nightCycleRef.current.progress;
@@ -30,8 +35,7 @@ export default function GrassFloor({
   });
 
   return (
-    <mesh ref={meshRef} position={position} scale={scale} receiveShadow>
-      <cylinderGeometry args={[radius, radius, height, 64]} />
+    <mesh ref={meshRef} geometry={geometry} position={position} scale={scale} receiveShadow>
       <meshStandardMaterial
         ref={matRef}
         color={color}
@@ -42,3 +46,5 @@ export default function GrassFloor({
     </mesh>
   );
 }
+
+export default memo(GrassFloor);

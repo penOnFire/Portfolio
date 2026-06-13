@@ -1,9 +1,9 @@
 import { Moon, Sun } from "lucide-react";
-import { useDayNight } from "../../context/DayNightContext";
+import { useDayNightUI } from "../../context/DayNightContext";
 import { getLandscapeTheme } from "../../utils/uiLandscapeTokens";
 
 export default function DayNightToggle() {
-  const { isDarkMode, toggleDarkMode } = useDayNight();
+  const { isDarkMode, toggleDarkMode } = useDayNightUI();
   const theme = getLandscapeTheme(isDarkMode);
 
   return (

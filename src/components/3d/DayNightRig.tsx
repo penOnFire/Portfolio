@@ -2,7 +2,7 @@ import { useFrame } from "@react-three/fiber";
 import gsap from "gsap";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { useDayNight } from "../../context/DayNightContext";
+import { useNightCycleRef } from "../../context/DayNightContext";
 import {
   AMBIENT,
   HEMISPHERE,
@@ -13,7 +13,7 @@ import {
 const CYCLE_DURATION = 0.7;
 
 export default function DayNightRig() {
-  const { nightCycleRef } = useDayNight();
+  const nightCycleRef = useNightCycleRef();
   const hemiRef = useRef<THREE.HemisphereLight>(null);
   const ambientRef = useRef<THREE.AmbientLight>(null);
   const directionalRef = useRef<THREE.DirectionalLight>(null);

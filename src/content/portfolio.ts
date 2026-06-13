@@ -177,9 +177,6 @@ export const SECONDARY_PROJECTS: Project[] = [
 export const ALL_PROJECTS: Project[] = [CLARITY, ...SECONDARY_PROJECTS];
 
 export const CONTACT = {
-  email: "fernandez.sean.marino@gmail.com",
-  phone: "+63 936 681 9789",
-  phoneHref: "tel:+639366819789",
   linkedin: "https://linkedin.com/in/sean-m-fernandez",
   github: "https://github.com/seanmfernandez",
   location: "Quezon City, Metro Manila",
@@ -191,6 +188,21 @@ export const CONTACT = {
     "I'd love to bring my full-stack skills, backend focus, and cloud engineering mindset to a team building impactful software.",
   nightBody:
     "Reach out if you need someone who thinks in systems, ships with tests, and grows toward cloud-scale architecture.",
+} as const;
+
+export const CONTACT_FORM = {
+  emailLabel: "Your email",
+  emailPlaceholder: "you@example.com",
+  messageLabel: "Your message",
+  messagePlaceholder: "Tell me about the role, project, or opportunity…",
+  submitLabel: "Send message",
+  sendingLabel: "Sending…",
+  successMessage: "Thanks — your message was sent. I'll get back to you soon.",
+  errorMessage: "Something went wrong. Please try again.",
+  configError:
+    "Contact form is not configured. Add VITE_WEB3FORMS_ACCESS_KEY to your environment.",
+  validationEmail: "Please enter a valid email address.",
+  validationMessage: "Please enter a message.",
 } as const;
 
 export type Testimonial = {

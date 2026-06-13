@@ -1,23 +1,29 @@
-import { useEffect, useMemo, useRef } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { useDayNight } from "../../context/DayNightContext";
+import { useNightCycleRef } from "../../context/DayNightContext";
 import { useCursorFaceTracking } from "../../hooks/useCursorFaceTracking";
 import {
   createMoonBumpMap,
   createMoonTexture,
 } from "../../utils/createMoonTexture";
+import { sharedGeometries } from "../../utils/geometryCache";
 
-export default function Moon({
+function Moon({
   scale = 1,
 }: {
   scale?: number | [number, number, number];
 }) {
-  const { nightCycleRef } = useDayNight();
+  const nightCycleRef = useNightCycleRef();
   const groupRef = useRef<THREE.Group>(null);
   const moonLightRef = useRef<THREE.PointLight>(null);
   const moonTexture = useMemo(() => createMoonTexture(), []);
   const moonBump = useMemo(() => createMoonBumpMap(), []);
+  const glowGeometry = useMemo(() => sharedGeometries.moonGlow(), []);
+  const bodyGeometry = useMemo(() => sharedGeometries.moonBody(), []);
+  const eyeGeometry = useMemo(() => sharedGeometries.moonEye(), []);
+  const mouthSmileGeometry = useMemo(() => sharedGeometries.moonMouthSmile(), []);
+  const mouthNeutralGeometry = useMemo(() => sharedGeometries.moonMouthNeutral(), []);
   const parentQuat = useMemo(() => new THREE.Quaternion(), []);
   const billboardQuat = useMemo(() => new THREE.Quaternion(), []);
   const {
@@ -33,7 +39,7 @@ export default function Moon({
     if (!light) return;
 
     light.castShadow = true;
-    light.shadow.mapSize.set(1024, 1024);
+    light.shadow.mapSize.set(512, 512);
     light.shadow.bias = -0.002;
     light.shadow.camera.near = 0.5;
     light.shadow.camera.far = 120;
@@ -75,8 +81,7 @@ export default function Moon({
         castShadow
       />
 
-      <mesh position={[0, 0, -0.15]}>
-        <sphereGeometry args={[1.05, 32, 32]} />
+      <mesh geometry={glowGeometry} position={[0, 0, -0.15]}>
         <meshStandardMaterial
           color="#c8ccd8"
           emissive="#b8bcc8"
@@ -86,8 +91,7 @@ export default function Moon({
         />
       </mesh>
 
-      <mesh>
-        <sphereGeometry args={[0.75, 48, 48]} />
+      <mesh geometry={bodyGeometry}>
         <meshStandardMaterial
           map={moonTexture}
           bumpMap={moonBump}
@@ -101,23 +105,24 @@ export default function Moon({
       </mesh>
 
       <group ref={faceRef}>
-        <mesh ref={leftEyeRef} position={[-0.25, 0.2, 0.72]}>
-          <sphereGeometry args={[0.09, 16, 16]} />
+        <mesh ref={leftEyeRef} geometry={eyeGeometry} position={[-0.25, 0.2, 0.72]}>
           <meshBasicMaterial color="#222" />
         </mesh>
 
-        <mesh ref={rightEyeRef} position={[0.25, 0.2, 0.72]}>
-          <sphereGeometry args={[0.09, 16, 16]} />
+        <mesh ref={rightEyeRef} geometry={eyeGeometry} position={[0.25, 0.2, 0.72]}>
           <meshBasicMaterial color="#222" />
         </mesh>
 
-        <mesh position={[0, -0.2, 0.72]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry
-            args={[isSmiling ? 0.2 : 0.1, isSmiling ? 0.2 : 0.1, 0.04, 32]}
-          />
+        <mesh
+          geometry={isSmiling ? mouthSmileGeometry : mouthNeutralGeometry}
+          position={[0, -0.2, 0.72]}
+          rotation={[Math.PI / 2, 0, 0]}
+        >
           <meshBasicMaterial color="#222" />
         </mesh>
       </group>
     </group>
   );
 }
+
+export default memo(Moon);

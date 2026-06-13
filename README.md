@@ -1,73 +1,51 @@
-# React + TypeScript + Vite
+# Sean Fernandez Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript + Vite portfolio with two views:
 
-Currently, two official plugins are available:
+- `/` and `/immersive` — 3D scroll-driven immersive experience
+- `/minimal` — bento-style minimal layout with light/dark theme
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Development
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Contact form (Web3Forms)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+The contact form on both views sends messages via [Web3Forms](https://web3forms.com).
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Create a free account at [web3forms.com](https://web3forms.com).
+2. Generate an access key tied to your inbox.
+3. Copy `.env.example` to `.env.local` and set your key:
+
+```bash
+VITE_WEB3FORMS_ACCESS_KEY=your_access_key_here
 ```
+
+4. Restart the dev server after changing env vars.
+
+If the key is missing, the form shows a configuration error instead of failing silently.
+
+## Production (Docker)
+
+Vite embeds `VITE_*` variables at **build time**. Pass the access key when building the image:
+
+```bash
+docker build --build-arg VITE_WEB3FORMS_ACCESS_KEY=your_access_key_here -t seanshine-portfolio .
+```
+
+### Caching
+
+- **Runtime (3D):** shared geometry cache, instanced star field, and split day/night context reduce GPU/CPU work during scroll.
+- **Production assets:** nginx serves hashed `/assets/` files with `Cache-Control: public, immutable` (1 year). `index.html` is always revalidated so deploys propagate.
+
+## Scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start dev server |
+| `npm run build` | Typecheck and production build |
+| `npm run preview` | Preview production build locally |
+| `npm run lint` | Run ESLint |

@@ -1,10 +1,10 @@
 import { memo } from "react";
-import { Mail, Phone } from "lucide-react";
 import GlassPanel, {
   getGlassTheme,
   glassPanelPadding,
   sectionShellClasses,
 } from "../ui/GlassPanel";
+import ContactForm from "../ui/ContactForm";
 import SectionHeader from "../ui/SectionHeader";
 import SectionModeStack from "../ui/SectionModeStack";
 import { CONTACT } from "../../content/portfolio";
@@ -33,26 +33,18 @@ const GitHubIcon = () => (
   </svg>
 );
 
-const CTA_LINKS = [
-  {
-    href: `mailto:${CONTACT.email}`,
-    label: "Email",
-    icon: Mail,
-    arcClass: "md:-rotate-2 md:translate-y-0",
-  },
+const SOCIAL_LINKS = [
   {
     href: CONTACT.linkedin,
     label: "LinkedIn",
     icon: LinkedInIcon,
-    external: true,
-    arcClass: "md:rotate-1 md:-translate-y-1",
+    arcClass: "md:-rotate-2 md:translate-y-0",
   },
   {
     href: CONTACT.github,
     label: "GitHub",
     icon: GitHubIcon,
-    external: true,
-    arcClass: "md:rotate-2 md:translate-y-0",
+    arcClass: "md:rotate-1 md:-translate-y-1",
   },
 ] as const;
 
@@ -70,7 +62,7 @@ const Contact = ({ isDarkMode = false }: ContactProps) => {
       <GlassPanel
         tint="warm"
         isDarkMode={isDarkMode}
-        className={`w-full max-w-md md:max-w-lg ${glassPanelPadding}`}
+        className={`w-full max-w-lg ${glassPanelPadding}`}
       >
         <SectionHeader
           isDarkMode={isDarkMode}
@@ -79,14 +71,16 @@ const Contact = ({ isDarkMode = false }: ContactProps) => {
           nightTitle={<>Let&apos;s build</>}
           daySubtitle="Something bright"
           nightSubtitle="Under the stars"
+          hideSubtitleOnMobile
+          className="[&_h2]:!text-2xl [&_h2]:sm:!text-3xl [&_h2]:md:!text-5xl"
         />
 
-        <div className={`${theme.calloutBox} mb-4 md:mb-6 mt-4 md:mt-6`}>
+        <div className={`${theme.calloutBox} mb-3 md:mb-5 mt-3 md:mt-5`}>
           <SectionModeStack
             isDarkMode={isDarkMode}
             gridClassName="grid w-full"
             dayLayer={
-              <p className="text-sm sm:text-base md:text-lg font-semibold text-white leading-snug">
+              <p className="text-xs sm:text-sm md:text-lg font-semibold text-white leading-snug">
                 Actively seeking a{" "}
                 <span className={theme.calloutHighlight}>
                   Software Development Internship (OJT)
@@ -95,7 +89,7 @@ const Contact = ({ isDarkMode = false }: ContactProps) => {
               </p>
             }
             nightLayer={
-              <p className="text-sm sm:text-base md:text-lg font-semibold text-white leading-snug">
+              <p className="text-xs sm:text-sm md:text-lg font-semibold text-white leading-snug">
                 Open for a{" "}
                 <span className={theme.calloutHighlight}>
                   Software Development Internship (OJT)
@@ -109,7 +103,7 @@ const Contact = ({ isDarkMode = false }: ContactProps) => {
         <SectionModeStack
           isDarkMode={isDarkMode}
           gridClassName="grid w-full"
-          className="mb-4 md:mb-6"
+          className="mb-3 md:mb-5"
           dayLayer={
             <p className={`text-xs sm:text-sm md:text-base ${theme.bodyText} leading-relaxed`}>
               {CONTACT.dayBody}
@@ -122,30 +116,25 @@ const Contact = ({ isDarkMode = false }: ContactProps) => {
           }
         />
 
-        <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-3 pointer-events-auto md:items-end md:pb-1">
-          {CTA_LINKS.map(({ href, label, icon: Icon, arcClass, ...rest }) => (
+        <ContactForm variant="immersive" isDarkMode={isDarkMode} />
+
+        <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-3 pointer-events-auto md:items-end md:pb-1 mt-4 md:mt-5">
+          {SOCIAL_LINKS.map(({ href, label, icon: Icon, arcClass }) => (
             <a
               key={label}
               href={href}
-              target={"external" in rest && rest.external ? "_blank" : undefined}
-              rel={"external" in rest && rest.external ? "noopener noreferrer" : undefined}
-              aria-label={"external" in rest && rest.external ? `${label} profile` : undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${label} profile`}
               className={`${theme.ctaButton} ${arcClass}`}
             >
-              <Icon className="w-4 h-4 shrink-0" />
+              <Icon />
               {label}
             </a>
           ))}
         </div>
 
-        <div className="flex flex-col items-center gap-1 mt-4 md:mt-5 pointer-events-auto">
-          <a
-            href={CONTACT.phoneHref}
-            className={`${theme.microLabel} inline-flex items-center gap-2 hover:text-white/70 transition-colors`}
-          >
-            <Phone className="w-3 h-3 shrink-0" />
-            {CONTACT.phone}
-          </a>
+        <div className="flex flex-col items-center mt-3 md:mt-4 pointer-events-auto">
           <SectionModeStack
             isDarkMode={isDarkMode}
             gridClassName="grid place-items-center w-full"

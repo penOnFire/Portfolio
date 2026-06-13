@@ -28,5 +28,16 @@ export function getMinimalTheme(isDark: boolean) {
     callout: isDark
       ? "rounded-xl border border-neutral-700 bg-neutral-800/60 p-4"
       : "rounded-xl border border-neutral-200 bg-neutral-100/80 p-4",
+    formLabel: isDark
+      ? "block text-xs font-semibold uppercase tracking-widest text-neutral-400 mb-1.5"
+      : "block text-xs font-semibold uppercase tracking-widest text-neutral-500 mb-1.5",
+    formInput: isDark
+      ? "w-full rounded-xl border border-neutral-700 bg-neutral-900 px-3 py-2.5 text-sm text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-950"
+      : "w-full rounded-xl border border-neutral-300 bg-white px-3 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 focus:ring-offset-neutral-50",
+    formTextarea: isDark
+      ? "w-full min-h-[5.5rem] resize-y rounded-xl border border-neutral-700 bg-neutral-900 px-3 py-2.5 text-sm text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-950 md:min-h-[6.5rem]"
+      : "w-full min-h-[5.5rem] resize-y rounded-xl border border-neutral-300 bg-white px-3 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 focus:ring-offset-neutral-50 md:min-h-[6.5rem]",
+    formStatusSuccess: isDark ? "text-sm font-medium text-neutral-200" : "text-sm font-medium text-neutral-800",
+    formStatusError: isDark ? "text-sm font-medium text-red-400" : "text-sm font-medium text-red-600",
   };
 }

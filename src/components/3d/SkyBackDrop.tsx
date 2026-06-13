@@ -1,13 +1,13 @@
 import { memo, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { useDayNight } from "../../context/DayNightContext";
+import { useNightCycleRef } from "../../context/DayNightContext";
 import { SKY_PALETTE, lerpColorPair } from "../../utils/nightPalettes";
 import { sharedGeometries } from "../../utils/geometryCache";
 import CartoonStarField from "./CartoonStarField";
 
 function SkyBackdrop() {
-  const { nightCycleRef } = useDayNight();
+  const nightCycleRef = useNightCycleRef();
   const meshRef = useRef<THREE.Mesh>(null);
   const { camera } = useThree();
   const tmpColor = useMemo(() => new THREE.Color(), []);

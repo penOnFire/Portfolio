@@ -15,7 +15,7 @@ import About from "../sections/About";
 import Skills from "../sections/Skills";
 import Projects from "../sections/Projects";
 import Contact from "../sections/Contacts";
-import { useDayNight } from "../../context/DayNightContext";
+import { useDayNightUI } from "../../context/DayNightContext";
 import { getLandscapeLayout } from "../../utils/landscapeLayoutCache";
 
 export const SCROLL_PAGES = 6;
@@ -515,7 +515,7 @@ const SceneContent = memo(function SceneContent({
   );
 });
 
-function ScrollSections({
+const ScrollSections = memo(function ScrollSections({
   introContentRef,
   isDarkMode,
 }: {
@@ -546,10 +546,10 @@ function ScrollSections({
       </div>
     </Scroll>
   );
-}
+});
 
 const Landing = () => {
-  const { isDarkMode } = useDayNight();
+  const { isDarkMode } = useDayNightUI();
   const [introDone, setIntroDone] = useState(false);
   const introContentRef = useRef<HTMLDivElement>(null);
 

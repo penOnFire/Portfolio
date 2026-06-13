@@ -1,19 +1,20 @@
 import { memo, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useDayNight } from "../../context/DayNightContext";
+import { useNightCycleRef } from "../../context/DayNightContext";
 import { createStarTexture } from "../../utils/createStarTexture";
 import { sharedGeometries } from "../../utils/geometryCache";
-import { getStarField } from "../../utils/starFieldCache";
+import { getStarField, STAR_COUNT } from "../../utils/starFieldCache";
 
 function CartoonStarField() {
-  const { nightCycleRef } = useDayNight();
+  const nightCycleRef = useNightCycleRef();
   const groupRef = useRef<THREE.Group>(null);
-  const starRefs = useRef<(THREE.Mesh | null)[]>([]);
+  const instancedRef = useRef<THREE.InstancedMesh>(null);
   const lastOpacityRef = useRef(-1);
   const { camera } = useThree();
   const stars = useMemo(() => getStarField(), []);
   const starGeometry = useMemo(() => sharedGeometries.starPlane(), []);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
   const starMaterial = useMemo(() => {
     const material = new THREE.MeshBasicMaterial({
       map: createStarTexture(),
@@ -42,36 +43,32 @@ function CartoonStarField() {
       lastOpacityRef.current = opacity;
     }
 
-    if (!starsVisible) return;
+    const mesh = instancedRef.current;
+    if (!mesh || !starsVisible) return;
 
     const camQuat = camera.quaternion;
-    starRefs.current.forEach((mesh, i) => {
-      if (!mesh) return;
-      const star = stars[i];
-      if (!star) return;
 
-      mesh.quaternion.copy(camQuat);
-      mesh.rotation.z = star.rotation;
+    stars.forEach((star, i) => {
+      dummy.position.copy(star.position);
+      dummy.quaternion.copy(camQuat);
+      dummy.rotation.z = star.rotation;
       const twinkle =
         1 + Math.sin(time * star.twinkleSpeed + star.twinklePhase) * 0.08;
       const s = star.baseScale * twinkle;
-      mesh.scale.set(s, s, s);
+      dummy.scale.set(s, s, s);
+      dummy.updateMatrix();
+      mesh.setMatrixAt(i, dummy.matrix);
     });
+
+    mesh.instanceMatrix.needsUpdate = true;
   });
 
   return (
     <group ref={groupRef} frustumCulled={false}>
-      {stars.map((star, i) => (
-        <mesh
-          key={i}
-          ref={(el) => {
-            starRefs.current[i] = el;
-          }}
-          position={star.position}
-          geometry={starGeometry}
-          material={starMaterial}
-        />
-      ))}
+      <instancedMesh
+        ref={instancedRef}
+        args={[starGeometry, starMaterial, STAR_COUNT]}
+      />
     </group>
   );
 }
