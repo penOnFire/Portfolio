@@ -3,7 +3,8 @@ export const PROFILE = {
   location: "Quezon City, Metro Manila",
   tagline: "Software Developer · BSIT @ QCU",
   classYear: "Class of 2027",
-  ojtStatus: "Actively seeking Software Development Internship (OJT) · June 2026",
+  ojtStatus:
+    "Actively seeking Software Development Internship (OJT) · August 2026",
 } as const;
 
 export const ABOUT = {
@@ -13,7 +14,11 @@ export const ABOUT = {
   dayParagraphs: [
     {
       text: "I'm a 3rd-year BSIT student at Quezon City University building software in the open. I love the entire journey of full-stack development—where clean user interfaces meet smart backend logic and secure APIs to create real-world impact.",
-      highlights: ["clean user interfaces", "smart backend logic", "secure APIs"],
+      highlights: [
+        "clean user interfaces",
+        "smart backend logic",
+        "secure APIs",
+      ],
     },
     {
       text: "Using React and TypeScript alongside Node.js and SQL Server, my goal is to ship maintainable code that actually solves problems. Right now, I'm expanding my toolkit into cloud engineering with GCP and Vercel.",
@@ -181,9 +186,9 @@ export const CONTACT = {
   github: "https://github.com/seanmfernandez",
   location: "Quezon City, Metro Manila",
   dayCallout:
-    "Actively seeking a Software Development Internship (OJT) starting June 2026.",
+    "Actively seeking a Software Development Internship (OJT) starting August 2026.",
   nightCallout:
-    "Open for a Software Development Internship (OJT) — June 2026 onward.",
+    "Open for a Software Development Internship (OJT) — August 2026 onward.",
   dayBody:
     "I'd love to bring my full-stack skills, backend focus, and cloud engineering mindset to a team building impactful software.",
   nightBody:

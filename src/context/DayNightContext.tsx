@@ -8,6 +8,10 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+import {
+  isDarkAppearance,
+  setStoredAppearance,
+} from "../utils/appearancePreference";
 
 export type NightCycle = {
   progress: number;
@@ -23,13 +27,19 @@ const NightCycleRefContext = createContext<RefObject<NightCycle> | null>(null);
 const DayNightUIContext = createContext<DayNightUIContextValue | null>(null);
 
 export function DayNightProvider({ children }: { children: ReactNode }) {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const nightCycleRef = useRef<NightCycle>({ progress: 0, target: 0 });
+  const initialDark = isDarkAppearance();
+  const [isDarkMode, setIsDarkMode] = useState(initialDark);
+  const nightCycleRef = useRef<NightCycle>({
+    progress: initialDark ? 1 : 0,
+    target: initialDark ? 1 : 0,
+  });
 
   const toggleDarkMode = useCallback(() => {
     setIsDarkMode((current) => {
-      nightCycleRef.current.target = current ? 0 : 1;
-      return !current;
+      const next = !current;
+      nightCycleRef.current.target = next ? 1 : 0;
+      setStoredAppearance(next ? "dark" : "light");
+      return next;
     });
   }, []);
 

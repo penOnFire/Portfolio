@@ -1,6 +1,6 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Scroll, ScrollControls, useScroll } from "@react-three/drei";
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import gsap from "gsap";
 import Tree from "../3d/Tree";
@@ -17,6 +17,10 @@ import Projects from "../sections/Projects";
 import Contact from "../sections/Contacts";
 import { useDayNightUI } from "../../context/DayNightContext";
 import { getLandscapeLayout } from "../../utils/landscapeLayoutCache";
+import {
+  hasImmersiveIntroPlayed,
+  markImmersiveIntroPlayed,
+} from "../../utils/immersiveIntroState";
 
 export const SCROLL_PAGES = 6;
 const NARRATIVE_PAGES = 5;
@@ -163,6 +167,33 @@ const CLOUD_EMPHASIS = {
   skyY: 1.5,
 };
 
+function setIntroFinalState(
+  grass: THREE.Group,
+  sky: THREE.Group,
+  mountains: THREE.Group,
+  trees: THREE.Group,
+  clouds: THREE.Group,
+  introContent: HTMLDivElement,
+) {
+  gsap.set(grass.position, { y: 0 });
+  gsap.set(sky.position, { y: 0 });
+  gsap.set(mountains.position, { x: 0 });
+  gsap.set(trees.position, { x: 0 });
+  gsap.set(clouds.position, { z: 0, y: 0 });
+
+  const headline = introContent.querySelector("[data-intro-headline]");
+  const accent = introContent.querySelector("[data-intro-accent]");
+  const underline = introContent.querySelector("[data-intro-underline]");
+  const subtext = introContent.querySelector("[data-intro-subtext]");
+
+  if (headline && accent && subtext) {
+    gsap.set(headline, { opacity: 1, y: 0, filter: "blur(0px)" });
+    gsap.set(accent, { opacity: 1, y: 0, filter: "blur(0px)" });
+    if (underline) gsap.set(underline, { scaleX: 1, opacity: 1 });
+    gsap.set(subtext, { opacity: 1, y: 0, letterSpacing: "0.35em" });
+  }
+}
+
 function EntranceSequence({
   grassGroupRef,
   skyGroupRef,
@@ -171,6 +202,7 @@ function EntranceSequence({
   cloudGroupRef,
   introContentRef,
   onIntroComplete,
+  skipIntro = false,
 }: {
   grassGroupRef: React.RefObject<THREE.Group>;
   skyGroupRef: React.RefObject<THREE.Group>;
@@ -179,6 +211,7 @@ function EntranceSequence({
   cloudGroupRef: React.RefObject<THREE.Group>;
   introContentRef: React.RefObject<HTMLDivElement | null>;
   onIntroComplete?: () => void;
+  skipIntro?: boolean;
 }) {
   useEffect(() => {
     let cancelled = false;
@@ -200,6 +233,12 @@ function EntranceSequence({
 
       const [grass, sky, mountains, trees, clouds] = refs.map((r) => r.current!);
       const introContent = introContentRef.current;
+
+      if (skipIntro) {
+        setIntroFinalState(grass, sky, mountains, trees, clouds, introContent);
+        onIntroComplete?.();
+        return;
+      }
 
       gsap.set(grass.position, { y: -25 });
       gsap.set(sky.position, { y: 35 });
@@ -290,7 +329,7 @@ function EntranceSequence({
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [skipIntro]);
 
   return null;
 }
@@ -550,8 +589,14 @@ const ScrollSections = memo(function ScrollSections({
 
 const Landing = () => {
   const { isDarkMode } = useDayNightUI();
-  const [introDone, setIntroDone] = useState(false);
+  const skipIntro = hasImmersiveIntroPlayed();
+  const [introDone, setIntroDone] = useState(skipIntro);
   const introContentRef = useRef<HTMLDivElement>(null);
+
+  const handleIntroComplete = useCallback(() => {
+    markImmersiveIntroPlayed();
+    setIntroDone(true);
+  }, []);
 
   const grassGroupRef = useRef<THREE.Group>(null!);
   const skyGroupRef = useRef<THREE.Group>(null!);
@@ -582,7 +627,8 @@ const Landing = () => {
         treeGroupRef={treeGroupRef}
         cloudGroupRef={cloudGroupRef}
         introContentRef={introContentRef}
-        onIntroComplete={() => setIntroDone(true)}
+        skipIntro={skipIntro}
+        onIntroComplete={handleIntroComplete}
       />
 
       <ResponsiveCamera />

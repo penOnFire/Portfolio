@@ -81,8 +81,10 @@ export default function GlassPanel({
 
   return (
     <Tag className={`${surface} ${tintClass} ${hoverClass} ${className}`}>
-      <GlassGrain />
-      <div className="relative z-10">{children}</div>
+      <div className="relative">
+        <GlassGrain />
+        <div className="relative z-10">{children}</div>
+      </div>
     </Tag>
   );
 }

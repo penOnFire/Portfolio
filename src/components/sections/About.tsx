@@ -97,18 +97,8 @@ const About = ({ isDarkMode = false }: AboutProps) => {
             showAccentBar
             dayEyebrow={ABOUT.dayEyebrow}
             nightEyebrow={ABOUT.nightEyebrow}
-            dayTitle={
-              <>
-                About
-                <span className="block md:ml-8 text-white/90">Me</span>
-              </>
-            }
-            nightTitle={
-              <>
-                About
-                <span className="block md:ml-8 text-white/90">Me</span>
-              </>
-            }
+            dayTitle="About Me"
+            nightTitle="About Me"
           />
           <SectionModeStack
             isDarkMode={isDarkMode}

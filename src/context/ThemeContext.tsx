@@ -6,35 +6,27 @@ import {
   useState,
   type ReactNode,
 } from "react";
-
-type Theme = "light" | "dark";
+import {
+  getStoredAppearance,
+  setStoredAppearance,
+  type Appearance,
+} from "../utils/appearancePreference";
 
 type ThemeContextValue = {
-  theme: Theme;
+  theme: Appearance;
   isDark: boolean;
   toggleTheme: () => void;
 };
 
-const STORAGE_KEY = "seanshine-minimal-theme";
-
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "light";
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored === "light" || stored === "dark") return stored;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
-}
-
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  const [theme, setTheme] = useState<Appearance>(getStoredAppearance);
 
   useEffect(() => {
     const root = document.documentElement;
     root.classList.toggle("dark", theme === "dark");
-    localStorage.setItem(STORAGE_KEY, theme);
+    setStoredAppearance(theme);
   }, [theme]);
 
   const toggleTheme = useCallback(() => {

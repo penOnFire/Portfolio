@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
 import { CONTACT } from "../../../content/portfolio";
 import { useTheme } from "../../../context/ThemeContext";
 import { getMinimalTheme } from "../../../utils/minimalTokens";
 import ContactForm from "../../ui/ContactForm";
+import ViewTransitionLink from "../../ui/ViewTransitionLink";
 import BentoCard from "../BentoCard";
 
 export default function ContactTile() {
@@ -38,12 +38,12 @@ export default function ContactTile() {
 
       <p className={`mt-4 text-sm ${theme.body}`}>{CONTACT.location}</p>
 
-      <Link
+      <ViewTransitionLink
         to="/immersive"
         className={`${theme.link} mt-6 inline-block text-sm font-medium`}
       >
         Explore the 3D portfolio →
-      </Link>
+      </ViewTransitionLink>
     </BentoCard>
   );
 }

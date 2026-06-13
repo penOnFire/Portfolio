@@ -13,7 +13,7 @@ import {
   type Project,
 } from "../../content/portfolio";
 
-const cardPaddingClasses = "p-3 md:p-4 lg:p-5";
+const cardPaddingClasses = "p-2.5 md:p-4 lg:p-5";
 const bodyTextMobile = "text-[11px] leading-snug";
 const bodyTextDesktop = "text-xs sm:text-sm md:text-sm md:leading-snug";
 
@@ -68,6 +68,7 @@ function ProjectCard({
     neutral: theme.badgeNeutral,
   };
   const badgeMobile = "max-md:text-[10px] max-md:px-2 max-md:py-0.5";
+  const isFeatured = project.featured === true;
 
   return (
     <GlassPanel
@@ -75,22 +76,24 @@ function ProjectCard({
       hover
       tint={project.tint}
       isDarkMode={isDarkMode}
-      className={`${cardPaddingClasses} text-left h-full`}
+      className={`${cardPaddingClasses} text-left h-auto md:h-full`}
     >
       <h3
         className={`font-black tracking-tighter leading-tight ${
-          project.featured
-            ? "text-base sm:text-xl md:text-2xl"
+          isFeatured
+            ? "text-sm sm:text-xl md:text-2xl"
             : "text-sm sm:text-lg md:text-xl"
         }`}
       >
         {project.title}
       </h3>
-      <p className={`${theme.microLabel} mt-1 md:mt-2 max-md:text-[9px]`}>
+      <p className={`${theme.microLabel} mt-0.5 md:mt-2 max-md:text-[9px] max-md:leading-tight`}>
         {project.subtitle}
       </p>
       <p
-        className={`${theme.microLabel} mt-0.5 md:mt-1 ${theme.roleText} leading-snug max-md:text-[9px]`}
+        className={`${theme.microLabel} mt-0.5 md:mt-1 ${theme.roleText} leading-snug max-md:text-[9px] max-md:leading-tight ${
+          isFeatured ? "max-md:line-clamp-1" : ""
+        }`}
       >
         {project.role}
       </p>
@@ -111,21 +114,32 @@ function ProjectCard({
           href={project.link}
           target="_blank"
           rel="noopener noreferrer"
-          className={`${theme.ctaButton} mt-2 md:mt-3 text-xs md:text-sm font-mono max-w-full max-md:px-3 max-md:py-2`}
+          className={`${theme.ctaButton} mt-1.5 md:mt-3 text-xs md:text-sm font-mono max-w-full max-md:px-2.5 max-md:py-1.5 max-md:text-[10px] ${
+            isFeatured ? "max-md:mt-1" : ""
+          }`}
         >
-          <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0" />
+          <ExternalLink className="w-3 h-3 md:w-4 md:h-4 shrink-0" />
           <span className="truncate">{project.link.replace("https://", "")}</span>
         </a>
       )}
-      <div className="flex flex-wrap gap-1 sm:gap-2 mt-2 md:mt-3">
-        {project.stack.map((tech) => (
+      <div className={`flex flex-wrap gap-1 sm:gap-2 ${isFeatured ? "mt-1.5 md:mt-3" : "mt-2 md:mt-3"}`}>
+        {project.stack.map((tech, index) => (
           <span
             key={tech}
-            className={`${badgeVariants[project.badgeVariant]} ${badgeMobile}`}
+            className={`${badgeVariants[project.badgeVariant]} ${badgeMobile} ${
+              isFeatured && index >= 4 ? "hidden md:inline-flex" : ""
+            }`}
           >
             {tech}
           </span>
         ))}
+        {isFeatured && project.stack.length > 4 && (
+          <span
+            className={`${badgeVariants[project.badgeVariant]} ${badgeMobile} md:hidden`}
+          >
+            +{project.stack.length - 4}
+          </span>
+        )}
       </div>
     </GlassPanel>
   );
@@ -150,7 +164,7 @@ const Projects = ({ isDarkMode = false }: ProjectsProps) => {
         className="mb-2 md:mb-3 shrink-0 [&_h2]:!text-2xl [&_h2]:sm:!text-3xl [&_h2]:md:!text-5xl"
       />
 
-      <div className="flex flex-col gap-2 md:gap-3 w-full min-h-0 flex-1">
+      <div className="flex flex-col gap-2 md:gap-3 w-full min-h-0 max-md:flex-none md:flex-1">
         <ProjectCard project={CLARITY} isDarkMode={isDarkMode} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 items-start">
           {SECONDARY_PROJECTS.map((project) => (

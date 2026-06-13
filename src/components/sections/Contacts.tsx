@@ -89,7 +89,7 @@ const Contact = ({ isDarkMode = false }: ContactProps) => {
                     <span className={theme.calloutHighlight}>
                       Software Development Internship (OJT)
                     </span>{" "}
-                    starting June 2026.
+                    starting August 2026.
                   </p>
                 }
                 nightLayer={
@@ -98,7 +98,7 @@ const Contact = ({ isDarkMode = false }: ContactProps) => {
                     <span className={theme.calloutHighlight}>
                       Software Development Internship (OJT)
                     </span>{" "}
-                    — June 2026 onward.
+                    — August 2026 onward.
                   </p>
                 }
               />
@@ -109,12 +109,16 @@ const Contact = ({ isDarkMode = false }: ContactProps) => {
               gridClassName="grid w-full"
               className="mb-3 md:mb-3 lg:mb-0"
               dayLayer={
-                <p className={`text-xs sm:text-sm md:text-sm ${theme.bodyText} leading-relaxed`}>
+                <p
+                  className={`text-xs sm:text-sm md:text-sm ${theme.bodyText} leading-relaxed`}
+                >
                   {CONTACT.dayBody}
                 </p>
               }
               nightLayer={
-                <p className={`text-xs sm:text-sm md:text-sm ${theme.bodyText} leading-relaxed`}>
+                <p
+                  className={`text-xs sm:text-sm md:text-sm ${theme.bodyText} leading-relaxed`}
+                >
                   {CONTACT.nightBody}
                 </p>
               }

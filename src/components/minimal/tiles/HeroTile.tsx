@@ -10,30 +10,41 @@ export default function HeroTile() {
 
   return (
     <BentoCard className="md:col-span-2">
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+      <div className="flex flex-row items-start gap-3 sm:gap-6">
         <div className="min-w-0 flex-1">
-          <p className={`${theme.cardTitle} mb-2`}>Portfolio</p>
-          <h1 className={`${theme.heading} mb-2`}>{PROFILE.name}</h1>
-          <p className={`${theme.body} mb-1`}>{PROFILE.location}</p>
-          <p className={`${theme.subheading} mb-4`}>{PROFILE.tagline}</p>
-          <p className={`${theme.callout} ${theme.body} mb-6 text-sm`}>
+          <p className={`${theme.cardTitle} mb-1.5 sm:mb-2 max-sm:text-[10px]`}>Portfolio</p>
+          <h1 className="mb-1.5 sm:mb-2 text-xl font-bold tracking-tight sm:text-2xl md:text-3xl">
+            {PROFILE.name}
+          </h1>
+          <p className={`${theme.body} mb-0.5 sm:mb-1 text-xs sm:text-base`}>
+            {PROFILE.location}
+          </p>
+          <p className="mb-2 sm:mb-4 text-sm font-semibold tracking-tight sm:text-lg">
+            {PROFILE.tagline}
+          </p>
+          <p
+            className={`${theme.callout} ${theme.body} mb-3 sm:mb-6 text-[11px] leading-snug sm:text-sm`}
+          >
             {PROFILE.ojtStatus}
           </p>
-          <div className="flex flex-wrap gap-2">
-            <a href="#contact" className={theme.buttonPrimary}>
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
+            <a
+              href="#contact"
+              className={`${theme.buttonPrimary} max-sm:px-3 max-sm:py-2 max-sm:text-xs`}
+            >
               Send a message
             </a>
             <a
               href={CONTACT.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className={theme.button}
+              className={`${theme.button} max-sm:px-3 max-sm:py-2 max-sm:text-xs`}
             >
               LinkedIn
             </a>
           </div>
         </div>
-        <ProfilePhoto className="relative mx-auto h-32 w-32 shrink-0 overflow-hidden rounded-xl ring-1 ring-neutral-200 sm:mx-0 sm:h-36 sm:w-36 md:h-44 md:w-44 dark:ring-neutral-700" />
+        <ProfilePhoto className="relative h-[5.25rem] w-[5.25rem] shrink-0 overflow-hidden rounded-lg ring-1 ring-neutral-200 sm:h-36 sm:w-36 sm:rounded-xl md:h-44 md:w-44 dark:ring-neutral-700" />
       </div>
     </BentoCard>
   );

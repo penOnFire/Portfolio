@@ -40,6 +40,12 @@ html:not([data-route]) body {
   overflow: hidden;
 }
 
+html[data-transitioning],
+html[data-transitioning] body {
+  overflow: hidden !important;
+  height: 100%;
+}
+
 body {
   font-family: var(--font-sans);
   margin: 0;

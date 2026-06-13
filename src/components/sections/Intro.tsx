@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { sectionShellClasses } from "../ui/GlassPanel";
 import SectionModeStack from "../ui/SectionModeStack";
 import { getLandscapeTheme } from "../../utils/uiLandscapeTokens";
+import { hasImmersiveIntroPlayed } from "../../utils/immersiveIntroState";
 
 type IntroProps = {
   contentRef?: React.RefObject<HTMLDivElement | null>;
@@ -16,7 +17,7 @@ const Intro = ({ contentRef, isDarkMode = false }: IntroProps) => {
   const theme = getLandscapeTheme(isDarkMode);
 
   useEffect(() => {
-    if (!isEntrance || !contentRef?.current) return;
+    if (!isEntrance || !contentRef?.current || hasImmersiveIntroPlayed()) return;
 
     const root = contentRef.current;
     const headline = root.querySelector("[data-intro-headline]");
