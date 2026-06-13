@@ -2,6 +2,7 @@ import { memo } from "react";
 import GlassPanel, {
   getGlassTheme,
   glassPanelPadding,
+  immersiveViewportClasses,
   sectionShellClasses,
 } from "../ui/GlassPanel";
 import ContactForm from "../ui/ContactForm";
@@ -57,12 +58,12 @@ const Contact = ({ isDarkMode = false }: ContactProps) => {
 
   return (
     <div
-      className={`flex flex-col items-center justify-center h-full text-white text-left font-sans ${sectionShellClasses}`}
+      className={`flex flex-col items-center justify-center text-white text-left font-sans ${sectionShellClasses} ${immersiveViewportClasses}`}
     >
       <GlassPanel
         tint="warm"
         isDarkMode={isDarkMode}
-        className={`w-full max-w-lg ${glassPanelPadding}`}
+        className={`w-full max-w-lg lg:max-w-3xl mx-auto ${glassPanelPadding} min-h-0 shrink-0`}
       >
         <SectionHeader
           isDarkMode={isDarkMode}
@@ -72,84 +73,91 @@ const Contact = ({ isDarkMode = false }: ContactProps) => {
           daySubtitle="Something bright"
           nightSubtitle="Under the stars"
           hideSubtitleOnMobile
-          className="[&_h2]:!text-2xl [&_h2]:sm:!text-3xl [&_h2]:md:!text-5xl"
+          hideSubtitleFromMd
+          className="shrink-0 [&_h2]:!text-2xl [&_h2]:sm:!text-3xl [&_h2]:md:!text-5xl"
         />
 
-        <div className={`${theme.calloutBox} mb-3 md:mb-5 mt-3 md:mt-5`}>
-          <SectionModeStack
-            isDarkMode={isDarkMode}
-            gridClassName="grid w-full"
-            dayLayer={
-              <p className="text-xs sm:text-sm md:text-lg font-semibold text-white leading-snug">
-                Actively seeking a{" "}
-                <span className={theme.calloutHighlight}>
-                  Software Development Internship (OJT)
-                </span>{" "}
-                starting June 2026.
-              </p>
-            }
-            nightLayer={
-              <p className="text-xs sm:text-sm md:text-lg font-semibold text-white leading-snug">
-                Open for a{" "}
-                <span className={theme.calloutHighlight}>
-                  Software Development Internship (OJT)
-                </span>{" "}
-                — June 2026 onward.
-              </p>
-            }
-          />
-        </div>
+        <div className="mt-3 md:mt-3 lg:grid lg:grid-cols-2 lg:gap-5 lg:items-start min-h-0">
+          <div className="lg:pr-1">
+            <div className={`${theme.calloutBox} mb-3 md:mb-3`}>
+              <SectionModeStack
+                isDarkMode={isDarkMode}
+                gridClassName="grid w-full"
+                dayLayer={
+                  <p className="text-xs sm:text-sm md:text-base font-semibold text-white leading-snug">
+                    Actively seeking a{" "}
+                    <span className={theme.calloutHighlight}>
+                      Software Development Internship (OJT)
+                    </span>{" "}
+                    starting June 2026.
+                  </p>
+                }
+                nightLayer={
+                  <p className="text-xs sm:text-sm md:text-base font-semibold text-white leading-snug">
+                    Open for a{" "}
+                    <span className={theme.calloutHighlight}>
+                      Software Development Internship (OJT)
+                    </span>{" "}
+                    — June 2026 onward.
+                  </p>
+                }
+              />
+            </div>
 
-        <SectionModeStack
-          isDarkMode={isDarkMode}
-          gridClassName="grid w-full"
-          className="mb-3 md:mb-5"
-          dayLayer={
-            <p className={`text-xs sm:text-sm md:text-base ${theme.bodyText} leading-relaxed`}>
-              {CONTACT.dayBody}
-            </p>
-          }
-          nightLayer={
-            <p className={`text-xs sm:text-sm md:text-base ${theme.bodyText} leading-relaxed`}>
-              {CONTACT.nightBody}
-            </p>
-          }
-        />
+            <SectionModeStack
+              isDarkMode={isDarkMode}
+              gridClassName="grid w-full"
+              className="mb-3 md:mb-3 lg:mb-0"
+              dayLayer={
+                <p className={`text-xs sm:text-sm md:text-sm ${theme.bodyText} leading-relaxed`}>
+                  {CONTACT.dayBody}
+                </p>
+              }
+              nightLayer={
+                <p className={`text-xs sm:text-sm md:text-sm ${theme.bodyText} leading-relaxed`}>
+                  {CONTACT.nightBody}
+                </p>
+              }
+            />
 
-        <ContactForm variant="immersive" isDarkMode={isDarkMode} />
+            <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-3 pointer-events-auto md:items-end md:pb-1 mt-3 md:mt-3 lg:mt-4">
+              {SOCIAL_LINKS.map(({ href, label, icon: Icon, arcClass }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${label} profile`}
+                  className={`${theme.ctaButton} ${arcClass}`}
+                >
+                  <Icon />
+                  {label}
+                </a>
+              ))}
+            </div>
 
-        <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 sm:gap-3 pointer-events-auto md:items-end md:pb-1 mt-4 md:mt-5">
-          {SOCIAL_LINKS.map(({ href, label, icon: Icon, arcClass }) => (
-            <a
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${label} profile`}
-              className={`${theme.ctaButton} ${arcClass}`}
-            >
-              <Icon />
-              {label}
-            </a>
-          ))}
-        </div>
+            <div className="flex flex-col items-center mt-3 md:mt-3 pointer-events-auto">
+              <SectionModeStack
+                isDarkMode={isDarkMode}
+                gridClassName="grid place-items-center w-full"
+                dayLayer={
+                  <span className={theme.microLabel}>{CONTACT.location}</span>
+                }
+                nightLayer={
+                  <span className={theme.microLabel}>
+                    <span className="text-[#6dd5ff]/60 mr-1" aria-hidden="true">
+                      ✦
+                    </span>
+                    {CONTACT.location}
+                  </span>
+                }
+              />
+            </div>
+          </div>
 
-        <div className="flex flex-col items-center mt-3 md:mt-4 pointer-events-auto">
-          <SectionModeStack
-            isDarkMode={isDarkMode}
-            gridClassName="grid place-items-center w-full"
-            dayLayer={
-              <span className={theme.microLabel}>{CONTACT.location}</span>
-            }
-            nightLayer={
-              <span className={theme.microLabel}>
-                <span className="text-[#6dd5ff]/60 mr-1" aria-hidden="true">
-                  ✦
-                </span>
-                {CONTACT.location}
-              </span>
-            }
-          />
+          <div className="mt-4 lg:mt-0 min-h-0">
+            <ContactForm variant="immersive" isDarkMode={isDarkMode} compact />
+          </div>
         </div>
       </GlassPanel>
     </div>

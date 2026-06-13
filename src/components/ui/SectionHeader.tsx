@@ -12,6 +12,7 @@ type SectionHeaderProps = {
   nightSubtitle?: ReactNode;
   showAccentBar?: boolean;
   hideSubtitleOnMobile?: boolean;
+  hideSubtitleFromMd?: boolean;
   className?: string;
   align?: "left" | "center";
 };
@@ -26,6 +27,7 @@ export default function SectionHeader({
   nightSubtitle,
   showAccentBar = false,
   hideSubtitleOnMobile = false,
+  hideSubtitleFromMd = false,
   className = "",
   align = "left",
 }: SectionHeaderProps) {
@@ -64,7 +66,7 @@ export default function SectionHeader({
         <SectionModeStack
           isDarkMode={isDarkMode}
           gridClassName="grid w-full"
-          className={`mt-1 ${hideSubtitleOnMobile ? "hidden md:block" : ""}`}
+          className={`mt-1 ${hideSubtitleOnMobile ? "hidden md:block" : ""} ${hideSubtitleFromMd ? "md:hidden" : ""}`}
           dayLayer={
             daySubtitle ? (
               <p className={`text-xl sm:text-2xl md:text-3xl font-bold ${theme.subtitle} tracking-tight`}>

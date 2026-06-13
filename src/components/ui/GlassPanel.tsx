@@ -17,6 +17,9 @@ export type GlassTint = keyof typeof PANEL_TINTS.day;
 export const sectionShellClasses =
   "w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8";
 
+export const immersiveViewportClasses =
+  "h-full max-h-[100dvh] w-full overflow-hidden md:py-4 lg:py-6";
+
 export const glassPanelPadding = "p-4 sm:p-5 md:p-6 lg:p-8";
 
 export const mobileScrollPanelClasses =

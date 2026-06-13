@@ -20,6 +20,7 @@ type ContactFormFieldsProps = {
   submitClass: string;
   successClass: string;
   errorClass: string;
+  compact?: boolean;
 };
 
 function ContactFormFields({
@@ -36,13 +37,14 @@ function ContactFormFields({
   submitClass,
   successClass,
   errorClass,
+  compact = false,
 }: ContactFormFieldsProps) {
   const isSubmitting = status === "submitting";
 
   return (
     <form
       onSubmit={onSubmit}
-      className="space-y-3 md:space-y-4 pointer-events-auto"
+      className={`pointer-events-auto ${compact ? "space-y-2 md:space-y-3" : "space-y-3 md:space-y-4"}`}
       noValidate
     >
       <input
@@ -82,7 +84,7 @@ function ContactFormFields({
           id="contact-message"
           name="message"
           required
-          rows={4}
+          rows={compact ? 3 : 4}
           value={message}
           disabled={isSubmitting}
           onChange={(event) => onMessageChange(event.target.value)}
@@ -173,7 +175,13 @@ function useContactFormState() {
   };
 }
 
-function ImmersiveContactForm({ isDarkMode }: { isDarkMode: boolean }) {
+function ImmersiveContactForm({
+  isDarkMode,
+  compact = false,
+}: {
+  isDarkMode: boolean;
+  compact?: boolean;
+}) {
   const theme = getLandscapeTheme(isDarkMode);
   const {
     email,
@@ -200,6 +208,7 @@ function ImmersiveContactForm({ isDarkMode }: { isDarkMode: boolean }) {
       submitClass={`${theme.ctaButton} w-full justify-center sm:w-auto`}
       successClass={theme.formStatusSuccess}
       errorClass={theme.formStatusError}
+      compact={compact}
     />
   );
 }
@@ -237,7 +246,7 @@ function MinimalContactForm() {
 }
 
 type ContactFormProps =
-  | { variant: "immersive"; isDarkMode: boolean }
+  | { variant: "immersive"; isDarkMode: boolean; compact?: boolean }
   | { variant: "minimal" };
 
 export default function ContactForm(props: ContactFormProps) {
@@ -245,5 +254,7 @@ export default function ContactForm(props: ContactFormProps) {
     return <MinimalContactForm />;
   }
 
-  return <ImmersiveContactForm isDarkMode={props.isDarkMode} />;
+  return (
+    <ImmersiveContactForm isDarkMode={props.isDarkMode} compact={props.compact} />
+  );
 }

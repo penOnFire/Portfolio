@@ -534,10 +534,10 @@ const ScrollSections = memo(function ScrollSections({
         <section className="h-screen w-full flex items-center justify-center pointer-events-none px-3 sm:px-4">
           <Skills isDarkMode={isDarkMode} />
         </section>
-        <section className="h-screen w-full flex items-center justify-center pointer-events-none px-3 sm:px-4">
+        <section className="h-screen w-full flex items-center justify-center overflow-hidden pointer-events-none px-3 sm:px-4">
           <Projects isDarkMode={isDarkMode} />
         </section>
-        <section className="h-screen w-full flex items-center justify-center pointer-events-none px-3 sm:px-4">
+        <section className="h-screen w-full flex items-center justify-center overflow-hidden pointer-events-none px-3 sm:px-4">
           <Contact isDarkMode={isDarkMode} />
         </section>
         <section className="h-screen w-full flex items-center justify-center pointer-events-none px-3 sm:px-4">

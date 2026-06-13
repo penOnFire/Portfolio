@@ -2,6 +2,7 @@ import { memo } from "react";
 import { ExternalLink } from "lucide-react";
 import GlassPanel, {
   getGlassTheme,
+  immersiveViewportClasses,
   sectionShellClasses,
 } from "../ui/GlassPanel";
 import SectionHeader from "../ui/SectionHeader";
@@ -12,35 +13,42 @@ import {
   type Project,
 } from "../../content/portfolio";
 
-const cardPaddingClasses = "p-3 md:p-5 lg:p-8";
+const cardPaddingClasses = "p-3 md:p-4 lg:p-5";
 const bodyTextMobile = "text-[11px] leading-snug";
-const bodyTextDesktop = "text-xs sm:text-sm md:text-base leading-relaxed";
+const bodyTextDesktop = "text-xs sm:text-sm md:text-sm md:leading-snug";
 
 function ProjectDescriptions({
   project,
   isDarkMode,
   variant,
+  featured = false,
 }: {
   project: Project;
   isDarkMode: boolean;
   variant: "mobile" | "desktop";
+  featured?: boolean;
 }) {
   const theme = getGlassTheme(isDarkMode);
   const isMobile = variant === "mobile";
   const dayText = isMobile ? project.mobileDayDescription : project.dayDescription;
   const nightText = isMobile ? project.mobileNightDescription : project.nightDescription;
   const textClass = isMobile ? bodyTextMobile : bodyTextDesktop;
+  const clampClass = featured ? "md:line-clamp-3" : "md:line-clamp-2";
 
   return (
     <SectionModeStack
       isDarkMode={isDarkMode}
       gridClassName="grid grid-rows-1 w-full"
-      className={isMobile ? "mt-1.5 md:hidden" : "mt-3 md:mt-4 hidden md:block"}
+      className={isMobile ? "mt-1.5 md:hidden" : `mt-2 md:mt-3 hidden md:block ${clampClass}`}
       dayLayer={
-        <p className={`${textClass} ${theme.bodyText}`}>{dayText}</p>
+        <p className={`${textClass} ${theme.bodyText}`} title={dayText}>
+          {dayText}
+        </p>
       }
       nightLayer={
-        <p className={`${textClass} ${theme.bodyText}`}>{nightText}</p>
+        <p className={`${textClass} ${theme.bodyText}`} title={nightText}>
+          {nightText}
+        </p>
       }
     />
   );
@@ -49,11 +57,9 @@ function ProjectDescriptions({
 function ProjectCard({
   project,
   isDarkMode,
-  className = "",
 }: {
   project: Project;
   isDarkMode: boolean;
-  className?: string;
 }) {
   const theme = getGlassTheme(isDarkMode);
   const badgeVariants = {
@@ -69,9 +75,7 @@ function ProjectCard({
       hover
       tint={project.tint}
       isDarkMode={isDarkMode}
-      className={`${cardPaddingClasses} text-left h-full ${className} ${
-        project.featured ? "md:min-h-[240px]" : ""
-      }`}
+      className={`${cardPaddingClasses} text-left h-full`}
     >
       <h3
         className={`font-black tracking-tighter leading-tight ${
@@ -90,20 +94,30 @@ function ProjectCard({
       >
         {project.role}
       </p>
-      <ProjectDescriptions project={project} isDarkMode={isDarkMode} variant="mobile" />
-      <ProjectDescriptions project={project} isDarkMode={isDarkMode} variant="desktop" />
+      <ProjectDescriptions
+        project={project}
+        isDarkMode={isDarkMode}
+        variant="mobile"
+        featured={project.featured}
+      />
+      <ProjectDescriptions
+        project={project}
+        isDarkMode={isDarkMode}
+        variant="desktop"
+        featured={project.featured}
+      />
       {project.link && (
         <a
           href={project.link}
           target="_blank"
           rel="noopener noreferrer"
-          className={`${theme.ctaButton} mt-2 md:mt-4 text-xs md:text-sm font-mono max-w-full max-md:px-3 max-md:py-2`}
+          className={`${theme.ctaButton} mt-2 md:mt-3 text-xs md:text-sm font-mono max-w-full max-md:px-3 max-md:py-2`}
         >
           <ExternalLink className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0" />
           <span className="truncate">{project.link.replace("https://", "")}</span>
         </a>
       )}
-      <div className="flex flex-wrap gap-1 sm:gap-2 mt-2 md:mt-4">
+      <div className="flex flex-wrap gap-1 sm:gap-2 mt-2 md:mt-3">
         {project.stack.map((tech) => (
           <span
             key={tech}
@@ -124,7 +138,7 @@ type ProjectsProps = {
 const Projects = ({ isDarkMode = false }: ProjectsProps) => {
   return (
     <div
-      className={`flex flex-col items-start justify-center h-full w-full text-white text-left font-sans ${sectionShellClasses}`}
+      className={`flex flex-col items-start justify-center md:justify-start md:items-stretch text-white text-left font-sans ${sectionShellClasses} ${immersiveViewportClasses}`}
     >
       <SectionHeader
         isDarkMode={isDarkMode}
@@ -133,19 +147,14 @@ const Projects = ({ isDarkMode = false }: ProjectsProps) => {
         daySubtitle="Built across the landscape"
         nightSubtitle="Peaks in the portfolio"
         hideSubtitleOnMobile
-        className="mb-2 md:mb-6 [&_h2]:!text-2xl [&_h2]:sm:!text-3xl [&_h2]:md:!text-5xl"
+        className="mb-2 md:mb-3 shrink-0 [&_h2]:!text-2xl [&_h2]:sm:!text-3xl [&_h2]:md:!text-5xl"
       />
 
-      <div className="flex flex-col gap-2 md:gap-4 w-full">
+      <div className="flex flex-col gap-2 md:gap-3 w-full min-h-0 flex-1">
         <ProjectCard project={CLARITY} isDarkMode={isDarkMode} />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 items-start">
-          {SECONDARY_PROJECTS.map((project, i) => (
-            <ProjectCard
-              key={project.title}
-              project={project}
-              isDarkMode={isDarkMode}
-              className={i === 0 ? "md:-mt-2" : "md:mt-4"}
-            />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 items-start">
+          {SECONDARY_PROJECTS.map((project) => (
+            <ProjectCard key={project.title} project={project} isDarkMode={isDarkMode} />
           ))}
         </div>
       </div>
