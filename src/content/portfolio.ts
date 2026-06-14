@@ -182,8 +182,8 @@ export const SECONDARY_PROJECTS: Project[] = [
 export const ALL_PROJECTS: Project[] = [CLARITY, ...SECONDARY_PROJECTS];
 
 export const CONTACT = {
-  linkedin: "https://linkedin.com/in/sean-m-fernandez",
-  github: "https://github.com/seanmfernandez",
+  linkedin: "https://linkedin.com/in/seanizonfire",
+  github: "https://github.com/penOnFire",
   location: "Quezon City, Metro Manila",
   dayCallout:
     "Actively seeking a Software Development Internship (OJT) starting August 2026.",
